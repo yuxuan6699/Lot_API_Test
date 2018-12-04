@@ -1,14 +1,15 @@
 import json
 import unittest
 from common.configHttp import RunMain
-import common.common
 import paramunittest
 import geturlParams
 import urllib.parse
+# import pythoncom
+import readExcel
+# pythoncom.CoInitialize()
 
-urlparams = geturlParams.geturlParams()
-url = urlparams.get_Url()
-login_xls = common.common.get_xls('userCase.xlsx', 'login')
+url = geturlParams.geturlParams().get_Url()# 调用我们的geturlParams获取我们拼接的URL
+login_xls = readExcel.readExcel().get_xls('userCase.xlsx', 'login')
 
 @paramunittest.parametrized(*login_xls)
 class testUserLogin(unittest.TestCase):
@@ -46,22 +47,21 @@ class testUserLogin(unittest.TestCase):
     def tearDown(self):
         print("测试结束，输出log完结\n\n")
 
-    def checkResult(self):
+    def checkResult(self):# 断言
         """
         check test result
         :return:
         """
-        data = self.query
         url1 = "http://www.xxx.com/login?"
-        new_url = url1 + data
-        data1 = dict(urllib.parse.parse_qsl(urllib.parse.urlsplit(new_url).query))
-        info = RunMain().run_main(self.method, urlparams.get_Url(), data1)
-        ss = json.loads(info)
-        if self.case_name == 'login':
+        new_url = url1 + self.query
+        data1 = dict(urllib.parse.parse_qsl(urllib.parse.urlsplit(new_url).query))# 将一个完整的URL中的name=&pwd=转换为{'name':'xxx','pwd':'bbb'}
+        info = RunMain().run_main(self.method, url, data1)# 根据Excel中的method调用run_main来进行requests请求，并拿到响应
+        ss = json.loads(info)# 将响应转换为字典格式
+        if self.case_name == 'login':# 如果case_name是login，说明合法，返回的code应该为200
             self.assertEqual(ss['code'], 200)
-        if self.case_name == 'login_error':
+        if self.case_name == 'login_error':# 同上
             self.assertEqual(ss['code'], -1)
-        if self.case_name == 'login_null':
+        if self.case_name == 'login_null':# 同上
             self.assertEqual(ss['code'], 10001)
 
 
