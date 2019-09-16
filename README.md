@@ -46,6 +46,3 @@ runAll.py：开始执行接口自动化，项目工程部署完毕后直接运�
 test_api.py：自己写的提供本地测试的接口服务
 
 test_sql.py：测试数据库连接池的文件，本次项目未用到数据库，可以忽略
-————————————————
-版权声明：本文为CSDN博主「songlh1234」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
-原文链接：https://blog.csdn.net/songlh1234/article/details/84317617
